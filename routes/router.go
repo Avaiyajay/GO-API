@@ -11,5 +11,6 @@ func Router(e *echo.Echo)  {
 	e.POST("/add-product", middleware.ProductRequestValidation(handler.AddNewProduct))
 	e.PUT("/update-product", handler.UpdateProduct)
 	e.DELETE("/delete-product", handler.DeleteProduct)
+	e.POST("/upload", handler.FileUpload)
 }
 

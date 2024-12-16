@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/Avaiyajay/Go-api/common"
@@ -90,4 +91,30 @@ func DeleteProduct(c echo.Context) error {
 		"message" : "Record Deleted Successfully!",
 	}
 	return c.JSON(http.StatusOK, response)
+}
+
+func FileUpload(c echo.Context) error {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Please send file with proper field name");
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Unable to Open File")
+	}
+	defer src.Close()
+
+	dest, err := os.Create(file.Filename)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Unable to Create File")
+	}
+	defer dest.Close()
+
+	if _, err := io.Copy(dest, src); err != nil {
+		return c.String(http.StatusInternalServerError, "Unable to copy file to destination")
+	}
+
+	return c.String(http.StatusOK, "File Upload Successful")
+
 }

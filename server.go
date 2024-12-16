@@ -15,10 +15,14 @@ import (
 
 func main() {
 	e := echo.New()
+	// wd, _ := os.Getwd()
+	// e.Static("/static", fmt.Sprintf(`%v/public`, wd))
+	e.Static("/static", "./public")
  	godotenv.Load()
 
 	common.InitDB()
 	common.DB.AutoMigrate(&models.Product{})
+
 	router.Router(e);
 
 	PORT := os.Getenv("PORT");
